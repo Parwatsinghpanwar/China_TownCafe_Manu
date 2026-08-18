@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>China Town Cafe - Menu</title>
+<style>
+  :root{
+    --wine:#4a1116;
+    --wine-deep:#33090c;
+    --gold:#f0c419;
+    --gold-deep:#d9a90a;
+    --cream:#fbf3e2;
+    --paper:#fffaf0;
+    --ink:#2b1010;
+    --muted:#8a5b56;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    background:var(--wine-deep);
+    color:var(--ink);
+  }
+  header{
+    background:linear-gradient(180deg,var(--wine) 0%, var(--wine-deep) 100%);
+    padding:22px 16px 16px;
+    text-align:center;
+    position:sticky;
+    top:0;
+    z-index:20;
+    box-shadow:0 4px 14px rgba(0,0,0,.35);
+  }
+  .header-top{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:8px;
+    max-width:480px;
+    margin:0 auto;
+  }
+  .header-text{
+    text-align:center;
+    flex:1;
+  }
+  .logo{
+    width:72px;
+    height:72px;
+    border-radius:50%;
+    border:2px solid var(--gold);
+    flex-shrink:0;
+    object-fit:cover;
+    box-shadow:0 2px 8px rgba(0,0,0,.4);
+  }
+  .brand-tag{
+    display:inline-block;
+    background:var(--gold);
+    color:var(--wine-deep);
+    font-weight:800;
+    font-size:11px;
+    letter-spacing:.14em;
+    padding:4px 12px;
+    border-radius:2px;
+    transform:skewX(-8deg);
+    margin-bottom:8px;
+  }
+  h1{
+    color:var(--cream);
+    font-size:26px;
+    margin:2px 0 4px;
+    letter-spacing:.03em;
+    font-family:Georgia,'Times New Roman',serif;
+  }
+  .sub{
+    color:#e8c9a5;
+    font-size:12px;
+    letter-spacing:.05em;
+    margin-bottom:14px;
+  }
+  .insta-link{
+    color:#e8c9a5;
+    text-decoration:none;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+    font-size:12px;
+    letter-spacing:.05em;
+  }
+  .search{
+    max-width:480px;
+    margin:0 auto 14px;
+  }
+  .search input{
+    width:100%;
+    padding:11px 14px;
+    border-radius:22px;
+    border:1px solid var(--gold-deep);
+    background:var(--wine-deep);
+    color:var(--cream);
+    font-size:14px;
+    outline:none;
+  }
+  .search input::placeholder{color:#c99;}
+  nav{
+    display:flex;
+    gap:8px;
+    overflow-x:auto;
+    padding:0 10px 12px;
+    scrollbar-width:none;
+  }
+  nav::-webkit-scrollbar{display:none;}
+  nav button{
+    flex:0 0 auto;
+    background:transparent;
+    border:1px solid var(--gold-deep);
+    color:var(--gold);
+    padding:7px 14px;
+    border-radius:16px;
+    font-size:12.5px;
+    font-weight:700;
+    letter-spacing:.03em;
+    white-space:nowrap;
+    cursor:pointer;
+  }
+  nav button.active{
+    background:var(--gold);
+    color:var(--wine-deep);
+    border-color:var(--gold);
+  }
+  main{
+    max-width:640px;
+    margin:0 auto;
+    padding:14px 12px 60px;
+  }
+  .category{
+    margin-bottom:26px;
+  }
+  .cat-title{
+    display:inline-block;
+    background:var(--gold);
+    color:var(--wine-deep);
+    font-weight:800;
+    font-size:15px;
+    letter-spacing:.05em;
+    padding:6px 16px;
+    border-radius:2px;
+    transform:skewX(-8deg);
+    margin-bottom:10px;
+  }
+  .cat-title span{display:inline-block;transform:skewX(8deg);}
+  .card{
+    background:var(--paper);
+    border:1px solid #e9d8b8;
+    border-radius:10px;
+    overflow:hidden;
+    box-shadow:0 2px 6px rgba(0,0,0,.15);
+  }
+  .item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    padding:11px 14px;
+    border-bottom:1px solid #f0e4c9;
+  }
+  .item:last-child{border-bottom:none;}
+  .item .name{
+    font-size:14.5px;
+    font-weight:600;
+    color:var(--ink);
+  }
+  .item .price{
+    font-size:14.5px;
+    font-weight:700;
+    color:var(--wine);
+    white-space:nowrap;
+  }
+  .item.hidden{display:none;}
+  .category.hidden{display:none;}
+  footer{
+    text-align:center;
+    color:#e8c9a5;
+    font-size:11.5px;
+    padding:18px 10px 26px;
+    letter-spacing:.05em;
+  }
+  .empty-msg{
+    display:none;
+    text-align:center;
+    color:var(--cream);
+    padding:40px 10px;
+    font-size:14px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <img src="data:image/jpeg;base64,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" alt="China Town Cafe Restro logo" class="logo">
+    <div class="header-text">
+      <div class="brand-tag">DINE &middot; SNACK &middot; SIP</div>
+      <h1>China Town Cafe</h1>
+      <div class="sub" style="margin:0 0 3px;">Indira Nagar, Neemuch &nbsp;|&nbsp; 📞 8817812506</div>
+      <a href="https://www.instagram.com/chinatowncafe_nmh" target="_blank" rel="noopener" class="insta-link">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#e8c9a5" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="#e8c9a5" stroke="none"/></svg>
+        @chinatowncafe_nmh
+      </a>
+    </div>
+  </div>
+  <div class="sub" style="text-align:center;margin-top:12px;">Veg &bull; Full Menu &bull; Prices in ₹</div>
+  <div class="search">
+    <input id="searchBox" type="text" placeholder="Search dishes... e.g. paneer, dosa, pizza" oninput="filterItems()">
+  </div>
+  <nav id="catNav"></nav>
+</header>
+
+<main id="mainContent"></main>
+<div class="empty-msg" id="emptyMsg">No dishes found. Try another search.</div>
+
+<footer>Menu &middot; All prices subject to change &middot; GST as applicable</footer>
+
+<script>
+const MENU = [
+  { cat: "Snacks", items: [
+    ["Veg Pakoda",80],["Onion Pakoda",90],["Paneer Tikka",250],["Hara Bhara Kabab",200]
+  ]},
+  { cat: "South Indian", items: [
+    ["Plain Dosa",50],["Masala Dosa",70],["Cut Dosa",80],["Cheese Masala Dosa",90],
+    ["Special Cut Dosa",120],["Cheese Cut Dosa",100],["Paper Dosa",120],["Plain Uttapam",150],
+    ["Onion Uttapam",40],["Tomato Uttapam",60],["Butter Uttapam",70],["Gini Roll Dosa",70],
+    ["Gini Cheese Roll Dosa",110],["Upma",140],["Idli Sambar",90],["Fried Idli",50],["Medu Vada Sambar",70]
+  ]},
+  { cat: "Jain Sabji", items: [
+    ["Paneer Butter Masala",170],["Matar Paneer",150],["Plain Daal",100],["Daal Makhani",180],
+    ["Shahi Paneer",190],["Chana Masala",170],["Methi Matar Malai",200]
+  ]},
+  { cat: "Soup", items: [
+    ["Veg Noodle Soup",70],["Tomato Soup",60],["Manchow Soup",80],["Hot & Sour Soup",90]
+  ]},
+  { cat: "Sandwich", items: [
+    ["Veg Sandwich",50],["Indori Sandwich",80],["Masala Toast Sandwich",90],
+    ["Masala Cheese Toast Sandwich",120],["Paneer Sandwich",120],["Veg Cheese Sandwich",100],
+    ["Cheese Garlic Bread",120],["Garlic Bread",100],["Bread Jam",40],["Special China Town Sandwich",150]
+  ]},
+  { cat: "Pizza & Pasta", items: [
+    ["Margarita Pizza",140],["Capsicum Onion Pizza",110],["Cheese Mushroom Pizza",160],
+    ["Cheese Best Pizza",150],["Veg Garden Fresh Pizza",130],["American Pizza",190],
+    ["Corn Cheese Pizza",170],["Paneer Cheese Pizza",180],["Veg Indori Pizza",160],
+    ["China Town Special Pizza",200]
+  ]},
+  { cat: "Burger & Vada Pav", items: [
+    ["Mexican Cheese Burger",80],["Double Cheese Burger",100],["Cheese Burger",80],
+    ["Aloo Tikki Burger",50],["Bada Pav Plain",30],["Cheese Bada Pav",40],["Bhel",40]
+  ]},
+  { cat: "Main Course (Sabji)", items: [
+    ["Matar Paneer",150],["Paneer Butter Masala",190],["Malai Kofta",250],["Kaju Curry",230],
+    ["Kadai Paneer",190],["Paneer Toofani",170],["Dal Fry",100],["Dal Tadka",120],
+    ["Paneer Tikka",200],["Dal Makhani",220],["Shahi Paneer",190],["Jeera Aloo",110],
+    ["Aloo Masala",120],["Aloo Gobi",130],["Aloo Matar Tamatar",140],["Dahi Bhindi",120],
+    ["Bhindi Masala",120],["Paneer Angara",200],["Palak Paneer",180],["Lahsun Palak",120],
+    ["Methi Lahsun",130],["Paneer Handi",190],["Paneer Patiala",200],["Paneer Lababdar",220],
+    ["Paneer Bhurji",220],["Paneer Kofta",190],["Mushroom Masala",230],["Mushroom Matar",200],
+    ["Mushroom Kadhi",220],["Sev Tamatar",240],["Sev Masala",130],["Bhindi Kurkuri",120],
+    ["Chana Masala",100],["Dum Aloo",130],["Kashmiri Aloo",150],["Mix Veg",150],
+    ["Navratan Korma",200],["Paneer Do Pyaza",190],["Methi Matar Malai",160]
+  ]},
+  { cat: "Paratha", items: [
+    ["Plain Paratha",50],["Aloo Paratha",60],["Aloo Onion Paratha",80],["Onion Paratha",70],
+    ["Mix Veg Paratha",80],["Paneer Paratha",90],["Gobi Paratha",70]
+  ]},
+  { cat: "Pav Bhaji & Momos", items: [
+    ["Masala Pav Bhaji",70],["Butter Pav Bhaji",80],["Cheese Pav Bhaji",90],
+    ["Cheese Paneer Pav Bhaji",110],["Extra Pav",10],["Veg Momos",70],["Veg Fried Momos",90],
+    ["Cheese Corn Fried Momos",120],["Cheese Corn Steam Momos",100],["Paneer Steam Momos",110],
+    ["Paneer Fried Momos",130],["Chole Bhature",100],["Veg Pakoda",70],["Paneer Pakoda",100],
+    ["Special Pav Pakoda",100]
+  ]},
+  { cat: "Shakes, Juice, Tea & Coffee", items: [
+    ["Oreo Shake",100],["KitKat Shake",110],["Strawberry Shake",90],["Banana Shake",70],
+    ["Milk Shake",60],["Chocolate Shake",100],["Cold Coffee",70],["Café Frappe",80],
+    ["Choco Frappe",110],["China Town Special Frappe",60],["Mango Shake",40],
+    ["China Town Special Hot Coffee",50],["Pineapple Juice",40],["Mix Juice",60]
+  ]},
+  { cat: "Ice Cream", items: [
+    ["Vanilla",30],["American Karat",50],["Rajbhog",50],["Cashew Draksh",50],["Butter Scotch",40],
+    ["Chocolate",50],["Mango",40],["Strawberry",50]
+  ]},
+  { cat: "Lassi & Buttermilk", items: [
+    ["Sweet Lassi",40],["Shahi Lassi",60],["Curd",30],["Salted Buttermilk",30]
+  ]},
+  { cat: "Mocktails", items: [
+    ["International Blue Lagoon",70],["International Mint Mojito",70],["Black Blue Martini",80],
+    ["Blue Berry Martini",80],["Panther King",90],["Fruit Punch",90],["Black Blue Master",100],
+    ["Hawaii Beach Cooler",90],["Slim Lady",90],["China Town Special Mocktail",100],
+    ["VIP Red Bull Mocktail",200]
+  ]},
+  { cat: "Roti", items: [
+    ["Tava Roti",10],["Butter Roti",15],["Tandoori Roti",20],["Naan",35],["Naan Butter",40],
+    ["Lachha Paratha",50],["Missi Roti",40],["Garlic Naan",60]
+  ]},
+  { cat: "Salad", items: [
+    ["Green Salad",50],["Katori Salad",70],["Kachumber Salad",60]
+  ]},
+  { cat: "Papad", items: [
+    ["Roasted Papad",20],["Fried Papad",20],["Masala Roasted Papad",30],["Masala Fried Papad",30]
+  ]},
+  { cat: "Raita", items: [
+    ["Masala Chaas",20],["Plain Curd",40],["Dry Fruit Lassi",50],["Boondi Raita",70],["Veg Raita",80]
+  ]},
+  { cat: "Rice", items: [
+    ["Plain Rice",100],["Jeera Rice",110],["Dal Khichdi",100],["Veg Pulao",130],
+    ["Paneer Pulao",150],["Kashmiri Pulao",160],["Veg Biryani",170]
+  ]},
+  { cat: "Chinese", items: [
+    ["Manchurian (Half/Full)","120 / 100"],["Chilly Paneer (Half/Full)","180 / 160"],
+    ["Hakka Noodles",130],["Veg Noodles",120],["Veg Chowmein",120],["Manchurian Fried Rice",130],
+    ["Fried Rice",100],["Lemon Rice",110],["Corn Fried Rice",130],["Veg Fried Rice",110],
+    ["Schezwan Fried Rice",120],["Baby Corn Manchurian","130 / 140"],["Chilly Mushroom Dry",150],
+    ["Mushroom Noodles",130],["Spring Roll",120],["Honey Chilly Potato",130],["Chilly Potato",110],
+    ["French Fries",100],["Crispy Corn",130],["Corn Chat",110],["Peanut Chat",100],
+    ["American Chopsueys",140],["Cheese Ball",110],["Veg Mexican Kabab",110],["Hara Bhara Kabab",100],
+    ["Paneer 65",170],["Paneer Gardan",150]
+  ]},
+  { cat: "Maggi", items: [
+    ["Plain Maggi",40],["Masala Maggi",50],["Veg Masala Maggi",70],
+    ["Veg Cheese Masala Maggi",90],["Veg Cheese Paneer Maggi",110]
+  ]}
+];
+
+const nav = document.getElementById('catNav');
+const main = document.getElementById('mainContent');
+
+MENU.forEach((group, idx) => {
+  const btn = document.createElement('button');
+  btn.textContent = group.cat;
+  btn.onclick = () => scrollToCat(idx);
+  btn.dataset.idx = idx;
+  nav.appendChild(btn);
+
+  const section = document.createElement('div');
+  section.className = 'category';
+  section.id = 'cat-' + idx;
+  section.innerHTML = `<div class="cat-title"><span>${group.cat}</span></div><div class="card">${
+    group.items.map(([name, price]) =>
+      `<div class="item" data-name="${name.toLowerCase()}">
+        <span class="name">${name}</span>
+        <span class="price">₹${price}</span>
+      </div>`
+    ).join('')
+  }</div>`;
+  main.appendChild(section);
+});
+
+function scrollToCat(idx){
+  document.getElementById('cat-' + idx).scrollIntoView({behavior:'smooth', block:'start', inline:'nearest'});
+  setActiveNav(idx);
+}
+
+function setActiveNav(idx){
+  [...nav.children].forEach(b => b.classList.toggle('active', +b.dataset.idx === idx));
+}
+
+// highlight nav on scroll
+const sections = [...document.querySelectorAll('.category')];
+window.addEventListener('scroll', () => {
+  let current = 0;
+  sections.forEach((s, i) => {
+    if (s.getBoundingClientRect().top - 140 <= 0) current = i;
+  });
+  setActiveNav(current);
+});
+setActiveNav(0);
+
+function filterItems(){
+  const q = document.getElementById('searchBox').value.trim().toLowerCase();
+  let anyVisible = false;
+  sections.forEach(section => {
+    let sectionHasMatch = false;
+    section.querySelectorAll('.item').forEach(item => {
+      const match = item.dataset.name.includes(q);
+      item.classList.toggle('hidden', !match);
+      if (match) sectionHasMatch = true;
+    });
+    section.classList.toggle('hidden', !sectionHasMatch);
+    if (sectionHasMatch) anyVisible = true;
+  });
+  document.getElementById('emptyMsg').style.display = anyVisible || q === '' ? 'none' : 'block';
+  document.getElementById('mainContent').style.display = anyVisible || q === '' ? '' : 'none';
+}
+</script>
+
+</body>
+</html>
