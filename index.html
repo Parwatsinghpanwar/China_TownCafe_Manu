@@ -135,6 +135,7 @@
   }
   .category{
     margin-bottom:26px;
+    scroll-margin-top:190px;
   }
   .cat-title{
     display:inline-block;
@@ -354,7 +355,10 @@ MENU.forEach((group, idx) => {
 });
 
 function scrollToCat(idx){
-  document.getElementById('cat-' + idx).scrollIntoView({behavior:'smooth', block:'start', inline:'nearest'});
+  const el = document.getElementById('cat-' + idx);
+  const headerH = document.querySelector('header').offsetHeight;
+  const top = el.getBoundingClientRect().top + window.pageYOffset - headerH - 10;
+  window.scrollTo({ top, behavior: 'smooth' });
   setActiveNav(idx);
 }
 
@@ -365,9 +369,10 @@ function setActiveNav(idx){
 // highlight nav on scroll
 const sections = [...document.querySelectorAll('.category')];
 window.addEventListener('scroll', () => {
+  const headerH = document.querySelector('header').offsetHeight;
   let current = 0;
   sections.forEach((s, i) => {
-    if (s.getBoundingClientRect().top - 140 <= 0) current = i;
+    if (s.getBoundingClientRect().top - headerH - 20 <= 0) current = i;
   });
   setActiveNav(current);
 });
